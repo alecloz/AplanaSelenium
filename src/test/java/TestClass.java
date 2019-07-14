@@ -15,6 +15,7 @@ public class TestClass {
 
     @Test
     public void test() {
+
         System.setProperty("webdriver.chrome.driver", "driver/chromedriver.exe");
         driver = new ChromeDriver();
         driver.get("https://rgs.ru");
@@ -25,18 +26,20 @@ public class TestClass {
         WebElement dmsBtn = driver.findElement(By.xpath("//ul[contains(@class, 'collapse')]//a[contains(text(), 'ДМС')]"));
         dmsBtn.click();
 
+        Wait<WebDriver> wait = new WebDriverWait(driver, 1,
+                1000);
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//h1[contains(text(), 'ДМС')][contains(text(), '— добровольное медицинское страхование')]"))));
         WebElement titleHere = driver.findElement(By.xpath("//h1[contains(text(), 'ДМС')][contains(text(), '— добровольное медицинское страхование')]"));
-        titleHere.isDisplayed();
+        boolean b1 = titleHere.isDisplayed();
+        Assert.assertTrue(b1);
 
         WebElement sendMessageBtn = driver.findElement(By.xpath("//a[contains(text(), 'Отправить заявку')]"));
         sendMessageBtn.click();
 
-        Wait<WebDriver> wait = new WebDriverWait(driver, 1,
-                1000);
         wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//b[contains(text(), 'Заявка на добровольное медицинское страхование')]"))));
-
         WebElement bodyText = driver.findElement(By.xpath("//b[contains(text(), 'Заявка на добровольное медицинское страхование')]"));
-        bodyText.isDisplayed();
+        boolean b2 = bodyText.isDisplayed();
+        Assert.assertTrue(b2);
 
         contactInformationFilling("Фамилия", "Иванов");
         contactInformationFilling("Имя", "Иван");
@@ -76,8 +79,10 @@ public class TestClass {
         WebElement sendBtn = driver.findElement(By.xpath("//button[@id='button-m'][contains(text(), 'Отправить')]"));
         sendBtn.click();
 
-        WebElement wrongEmailMessage = driver.findElement(By.xpath("//span[text()='Введите адрес электронной почты']"));
-        wrongEmailMessage.isDisplayed();
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//*[@class = 'validation-error-text']"))));
+        WebElement wrongEmailMessage = driver.findElement(By.xpath("//*[@class = 'validation-error-text']"));
+        boolean b3 = wrongEmailMessage.isDisplayed();
+        Assert.assertTrue(b3);
 
         WebElement wrongEmail = driver.findElement(By.xpath("//*[@name='Email']"));
         wrongEmail.clear();
@@ -85,13 +90,10 @@ public class TestClass {
 
         driver.close();
         driver.quit();
-
     }
     public void contactInformationFilling(String name, String textToFill) {
         String template = "//*[text() = '%s']/following::input[1]";
         String fullXpath = String.format(template, name);
-        WebElement el = driver.findElement(By.xpath(fullXpath));
-        el.sendKeys(textToFill);
-        el.sendKeys("\t");
+        driver.findElement(By.xpath(fullXpath)).sendKeys(textToFill);
     }
 }
