@@ -41,10 +41,15 @@ public class TestClass2 {
 
         ArrayList<String> tabs2 = new ArrayList<>(driver.getWindowHandles());
         driver.switchTo().window(tabs2.get(0));
-        driver.close();
+        //driver.close();
         driver.switchTo().window(tabs2.get(1));
 
+        WebElement elementMin = driver.findElement(By.xpath("//div[text()='Минимальная']"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", elementMin);
         clickBtn("//div[text()='Минимальная']");
+
+        WebElement elementAccept = driver.findElement(By.xpath("//span[contains(text(), 'Оформить')]"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", elementAccept);
         clickBtn("//span[contains(text(), 'Оформить')]");
 
         fillingForm("insured0_surname", "PETROV");
@@ -56,6 +61,10 @@ public class TestClass2 {
         clickBtn("//*[@name = 'birthDate']");
         fillingForm("birthDate", "02.02.2000");
         clickBtn("//*[@name = 'male']");
+
+        JavascriptExecutor jse = (JavascriptExecutor)driver;
+        jse.executeScript("scroll(0, 750);");
+
         fillingForm("passport_series", "8264");
         fillingForm("passport_number", "826401");
         fillingForm("issueDate", "02.02.2015");
