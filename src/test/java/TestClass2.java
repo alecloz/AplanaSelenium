@@ -10,22 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class TestClass2 {
-
-    private static WebDriver driver;
-
-    @BeforeClass
-    public static void start() {
-        driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
-        driver.manage().window().maximize();
-    }
-
-    @AfterClass
-    public static void stop() {
-        driver.close();
-        driver.quit();
-    }
+public class TestClass2 extends AbstractTestClass2{
 
     @Test
     public void test() {
@@ -41,7 +26,7 @@ public class TestClass2 {
 
         ArrayList<String> tabs2 = new ArrayList<>(driver.getWindowHandles());
         driver.switchTo().window(tabs2.get(0));
-        //driver.close();
+        driver.close();
         driver.switchTo().window(tabs2.get(1));
 
         WebElement elementMin = driver.findElement(By.xpath("//div[text()='Минимальная']"));
@@ -88,22 +73,5 @@ public class TestClass2 {
         WebElement errorMessage = driver.findElement(By.xpath("//div[contains(text(), 'Заполнены не все обязательные поля')]"));
         boolean errorCheck = errorMessage.isDisplayed();
         Assert.assertTrue("Error message is not displayed!", errorCheck);
-    }
-
-    public void clickBtn(String xpathStr) {
-        driver.findElement(By.xpath(xpathStr)).click();
-    }
-
-    public void assertCheck(String expected, String name) {
-        String template = "//*[@name = '%s']";
-        String fullXpath = String.format(template, name);
-        String actual = driver.findElement(By.xpath(fullXpath)).getAttribute("value");
-        Assert.assertEquals("Assert error", expected, actual);
-    }
-
-    public void fillingForm(String name, String textToFill) {
-        String template = "//*[@name = '%s']";
-        String fullXpath = String.format(template, name);
-        driver.findElement(By.xpath(fullXpath)).sendKeys(textToFill);
     }
 }
