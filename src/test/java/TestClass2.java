@@ -19,7 +19,6 @@ public class TestClass2 {
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
         driver.manage().window().maximize();
-
     }
 
     @AfterClass
